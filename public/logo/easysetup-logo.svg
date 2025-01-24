@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+  <g transform="translate(20, 50)">
+    <!-- Overlapping circles -->
+    <circle cx="25" cy="0" r="20" fill="#0066FF" style="mix-blend-mode: screen;"/>
+    <circle cx="15" cy="15" r="20" fill="#FF0000" style="mix-blend-mode: screen;"/>
+    <circle cx="35" cy="15" r="20" fill="#00FF00" style="mix-blend-mode: screen;"/>
+    
+    <!-- Text -->
+    <text x="80" y="15" font-family="Comforta" font-size="45" font-weight="400">EASYSETUP</text>
+  </g>
+</svg>
