@@ -11,7 +11,8 @@ const document = ref({
   name: '',
   category: '',
   link: '',
-  state: 'draft'
+  description: '',
+  state: 'publish'
 });
 
 const loading = ref(false);
@@ -26,15 +27,14 @@ async function fetchData() {
 
     document.value = docResponse.data;
     categories.value = catResponse.data;
-    console.log(document.value);
-    // console.log(categories.value);
   } catch (err) {
     error.value = 'Failed to load data: ' + err.message;
   }
 }
 
 function handleCategoryChange(value) {
-  document.value.category = value;
+  document.value.category._id = value;
+  console.log(document.value.category);
 }
 
 function validateForm() {
@@ -44,6 +44,10 @@ function validateForm() {
   }
   if (!document.value.link.trim()) {
     error.value = 'Link is required';
+    return false;
+  }
+  if (!document.value.description.trim()) {
+    error.value = 'Description is required';
     return false;
   }
   if (!document.value.category) {
@@ -114,11 +118,22 @@ onMounted(fetchData);
           />
         </div>
 
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Description</label>
+          <input
+              v-model.trim="document.description"
+              type="text"
+              required
+              class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all"
+              placeholder="Description"
+          />
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">Category</label>
             <select
-                v-model="document.category"
+                v-model="document.category._id"
                 required
                 @change="handleCategoryChange($event.target.value)"
                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all bg-white"

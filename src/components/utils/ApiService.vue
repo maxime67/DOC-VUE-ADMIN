@@ -51,7 +51,7 @@ export const searchByName = async (name) => {
     return response.data;
 
   } catch (error) {
-    console.error('Error fetching documenattion by name:', error);
+    console.error('Error fetching documentation by name:', error);
   }
 }
 export const deleteDoc = async (id) => {
@@ -59,7 +59,16 @@ export const deleteDoc = async (id) => {
     await axios.delete(
         import.meta.env.VITE_APIURL + `/api/documentation/${id}`,
     );
-    location.reload()
+  } catch (error) {
+    console.error('Error delete data:', error);
+  }
+}
+
+export const deleteCat = async (id) => {
+  try {
+    await axios.delete(
+        import.meta.env.VITE_APIURL + `/api/categories/${id}`,
+    );
   } catch (error) {
     console.error('Error delete data:', error);
   }
