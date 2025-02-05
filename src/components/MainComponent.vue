@@ -1,61 +1,65 @@
 <template>
   <div class="flex min-h-screen">
     <div class="flex min-h-screen">
-      <SidebarComponent
-          @categoryClick="handleCategoryClick"
-          @search="searchWithName"
-          @displayAll="displayAll"
-      />
-    <main class="flex-1 p-6">
-      <div v-if="loading">Loading...</div>
-      <div v-else class="grid gap-6">
-        <div class="relative flex flex-col rounded-lg bg-white">
-          <nav class="grid grid-cols-2 gap-6">
-            <div v-for="item in results" :key="item._id" class="w-full h-full bg-white p-4 rounded">
-              <a :href="item.link">
-              <div
-                  class="h-80 group relative cursor-pointer overflow-hidden bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:mx-auto sm:max-w-sm sm:rounded-lg sm:px-10">
-                <span class="absolute top-10 z-0 h-20 w-20 rounded-full bg-violet-700 transition-all duration-300 group-hover:scale-[10]">
-                </span>
-                <div class="relative z-10 mx-auto max-w-md">
-                  <span class="grid h-20 w-20 place-items-center rounded-full bg-violet-700 transition-all duration-300 group-hover:bg-violet-700">
-                    <img :src="'../logo/' + item.category.name + '.svg'"  alt=""/>
-                  </span>
+      <SidebarComponent @categoryClick="handleCategoryClick" @search="searchWithName" @displayAll="displayAll" />
+      <ModalComponent :visible="showModal" :item-id="selectedItemId" @close="closeModal"
+                            @confirm="handleDeleteConfirmation" />
+      <main class="flex-1 p-6">
+        <div v-if="loading">Loading...</div>
+        <div v-else class="grid gap-6">
+          <div class="relative flex flex-col rounded-lg bg-white">
+            <nav class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div v-for="item in results" :key="item._id" class="w-full h-full bg-white p-4 rounded">
+                <a :href="item.link">
                   <div
-                      class="space-y-6 pt-5 text-base leading-7 text-gray-600 transition-all duration-300 group-hover:text-white/90">
-                    <p>
-                      {{ item.name }}
-                    </p>
-                    <p>{{ item.description }}</p>
+                    class="h-80 group relative cursor-pointer overflow-hidden bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:mx-auto sm:max-w-sm sm:rounded-lg sm:px-10">
+                    <span
+                      class="absolute top-10 z-0 h-20 w-20 rounded-full bg-violet-700 transition-all duration-300 group-hover:scale-[10]">
+                    </span>
+                    <div class="relative z-10 mx-auto max-w-md">
+                      <span
+                        class="grid h-20 w-20 place-items-center rounded-full bg-violet-700 transition-all duration-300 group-hover:bg-violet-700">
+                        <img :src="'../logo/' + item.category.name + '.svg'" alt="" />
+                      </span>
+                      <div
+                        class="space-y-6 pt-5 text-base leading-7 text-gray-600 transition-all duration-300 group-hover:text-white/90">
+                        <p>
+                          {{ item.name }}
+                        </p>
+                        <p>{{ item.description }}</p>
+                      </div>
+                      <div class="pt-5 flex items-center justify-between">
+                        <p class="flex justify-between w-full gap-4"> <!-- Added w-full and justify-between -->
+                          <a @click.stop.prevent="updateDocButton(item._id)">
+                            <button
+                              class="rounded-md border border-black py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-black hover:text-white hover:bg-violet-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                              type="button">
+                              Update
+                            </button>
+                          </a>
+                          <a @click.stop.prevent="openModal(item._id)">
+                            <button
+                              class="rounded-md border border-red-800 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-red-600 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                              type="button">
+                              Remove
+                            </button>
+                          </a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div class="pt-5 flex items-center justify-between">
-                    <p class="flex justify-between w-full gap-4"> <!-- Added w-full and justify-between -->
-                      <a @click.stop.prevent="updateDocButton(item._id)">
-                        <button class="rounded-md border border-black py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-black hover:text-white hover:bg-violet-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                          Update
-                        </button>
-                      </a>
-                      <a @click.stop.prevent="deleteDocButton(item._id)">
-                        <button class="rounded-md border border-red-800 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-red-600  disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                          Remove
-                        </button>
-                      </a>
-                    </p>
-                  </div>
-                </div>
+                </a>
               </div>
-              </a>
-            </div>
-          </nav>
+            </nav>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 import {
   deleteDoc,
   fetchAll,
@@ -65,12 +69,34 @@ import {
   updateDoc
 } from '@/components/utils/ApiService.vue'
 import SidebarComponent from "@/components/Sidebar.vue";
+import ModalComponent from './ModalComponent.vue';
 
 const categories = ref([])
 const selectedSubcategories = ref([])
 const loading = ref(false)
 const results = ref()
-const searchString = ref()
+const showModal = ref(false)
+const selectedItemId = ref(null)
+
+const openModal = (id) => {
+  selectedItemId.value = id
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
+  selectedItemId.value = null
+}
+
+const handleDeleteConfirmation = async (id) => {
+  try {
+    await deleteDoc(id)
+    results.value = results.value.filter(item => item._id !== id)
+  } catch (error) {
+    console.error('Error deleting documentation:', error)
+  }
+}
+
 const handleCategoryClick = async (categoryId) => {
   loading.value = true
   try {
@@ -82,15 +108,6 @@ const handleCategoryClick = async (categoryId) => {
   }
 }
 
-const deleteDocButton = async (id) => {
-  try {
-    await deleteDoc(id)
-    results.value = results.value.filter(item => item._id !== id)
-  } catch (error) {
-    console.error('Error delete documentation:', error)
-  }
-};
-
 const updateDocButton = async (id) => {
   try {
     await updateDoc(id)
@@ -98,10 +115,9 @@ const updateDocButton = async (id) => {
     console.error('Error delete documentation:', error)
   }
 };
-const searchWithName = async () => {
+const searchWithName = async (searchString) => {
   try {
-    results.value = await searchByName(searchString.value)
-    console.log(searchString)
+    results.value = await searchByName(searchString)
   } catch (error) {
     console.error('Error fetch documentation by name:', error)
   }

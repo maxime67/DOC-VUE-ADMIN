@@ -68,7 +68,7 @@ async function createDocument() {
     router.push({name: "home"})
 
   } catch (err) {
-    error.value = 'Failed to create document: ' + err.message;
+    error.value = 'Failed to create category, same name already exist ';
     emit('error', error.value);
   } finally {
     loading.value = false;
@@ -81,9 +81,7 @@ onMounted(fetchCategories);
 <template>
   <div class="min-h-screen bg-white">
     <div class="container mx-auto px-4 py-8 max-w-3xl">
-      <h2 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-8">
-        Create New Document
-      </h2>
+
 
       <div
           v-if="error"
@@ -99,12 +97,16 @@ onMounted(fetchCategories);
               v-model.trim="document.name"
               type="text"
               required
-              class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all"
+              class="block w-full max-w-xs pr-4 pl-20 py-2 text-sm font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none leading-relaxed"
               placeholder="Enter document name"
           />
         </div>
-
-        <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Link</label>
+        <div class="relative">
+        <div class=" absolute left-0 top-0.5 py-2 text-sm h-10 px-3 text-gray-500 border-r border-gray-300"> https:// </div>
+        <input required v-model.trim="document.link" type="url" class="block w-full max-w-xs pr-4 pl-20 py-2 text-sm font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none leading-relaxed" placeholder="https://google.com">
+        </div>
+        <!-- <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">Link</label>
           <input
               v-model.trim="document.link"
@@ -113,7 +115,7 @@ onMounted(fetchCategories);
               class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all"
               placeholder="https://example.com"
           />
-        </div>
+        </div> -->
 
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">Description</label>
@@ -121,7 +123,7 @@ onMounted(fetchCategories);
               v-model.trim="document.description"
               type="text"
               required
-              class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all"
+              class="block w-full max-w-xs pr-4 pl-20 py-2 text-sm font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none leading-relaxed"
               placeholder="Description"
           />
         </div>
@@ -133,9 +135,10 @@ onMounted(fetchCategories);
                 v-model="document.category"
                 required
                 @change="handleCategoryChange($event.target.value)"
-                class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all bg-white"
+                class="block w-full max-w-xs pr-4 pl-20 py-2 text-sm font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none leading-relaxed"
             >
-              <option value="">Select a category</option>
+              <option 
+              value="">Select a category</option>
               <option
                   v-for="category in categories"
                   :key="category._id"
@@ -151,9 +154,11 @@ onMounted(fetchCategories);
             <select
                 v-model="document.state"
                 required
-                class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all bg-white"
+                class="block w-full max-w-xs pr-4 pl-20 py-2 text-sm font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none leading-relaxed"
             >
-              <option v-for="state in states" :key="state" :value="state">
+              <option
+              class="block w-full max-w-xs pr-4 pl-20 py-2 text-sm font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none leading-relaxed"
+              v-for="state in states" :key="state" :value="state">
                 {{ state }}
               </option>
             </select>

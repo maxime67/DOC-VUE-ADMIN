@@ -20,9 +20,8 @@ const handleCategoryClick = (categoryId) => {
 }
 
 const searchWithName = () => {
-  if (props.onSearch) {
-    props.onSearch(searchString.value)
-    // console.log(searchString)
+  if (props.onSearch) {    
+    props.onSearch(searchString.value)    
   }
 }
 
@@ -58,7 +57,7 @@ onMounted(async () => {
 
       <div class="inline-flex">
         <router-link to="/add/category">
-          <div class="pl-3.5 hidden lg:block">
+          <div class="p-4">
             <ul class="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
               <li class="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                 <img class="w-8 rounded-md" :src="`../logo/new.png`" />
@@ -67,7 +66,7 @@ onMounted(async () => {
           </div>
         </router-link>
         <router-link to="/manage/category">
-          <div class="pl-3.5 hidden lg:block">
+          <div class="p-4">
             <ul class="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
               <li class="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                 <img class="w-8 rounded-md" :src="`../logo/manage.png`" />
@@ -77,7 +76,7 @@ onMounted(async () => {
         </router-link>
       </div>
 
-      <div class="w-full max-w-sm min-w-[200px]">
+      <div class="w-full max-w-sm">
         <div class="relative">
           <input
               v-model="searchString"

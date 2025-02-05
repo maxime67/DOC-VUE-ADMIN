@@ -34,7 +34,6 @@ async function fetchData() {
 
 function handleCategoryChange(value) {
   document.value.category._id = value;
-  console.log(document.value.category);
 }
 
 function validateForm() {
