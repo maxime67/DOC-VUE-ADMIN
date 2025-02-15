@@ -70,12 +70,12 @@ onMounted(fetchCategories);
 
       <form @submit.prevent="createDocument" class="space-y-6">
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">Name</label>
+          <label class="block text-sm font-medium text-gray-700">📝 Name</label>
           <input
               v-model.trim="document.name"
               type="text"
               required
-              class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 outline-none transition-all"
+              class="block w-full px-4 py-2.5 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200"
               placeholder="Enter Category name"
           />
         </div>
