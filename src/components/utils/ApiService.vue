@@ -35,14 +35,6 @@ export const fetchByCategory = async (id) => {
   }
 }
 
-export const updateDoc = async (id) => {
-  try {
-    router.push({ name: 'updateDocumentation', params: { id: id } });
-  } catch (error) {
-    console.error('Error updating data:', error);
-  }
-}
-
 export const searchByName = async (name) => {
   try {
     console.log(name);
@@ -72,6 +64,17 @@ export const deleteCat = async (id) => {
         import.meta.env.VITE_APIURL + `/api/categories/${id}`,
     );
     location.reload()
+  } catch (error) {
+    console.error('Error delete category:', error);
+  }
+}
+
+export const updateCategoryName = async (id, newName) => {
+  try {
+    await axios.put(
+        `${import.meta.env.VITE_APIURL}/api/categories/${id}`,
+        newName
+    );
   } catch (error) {
     console.error('Error delete category:', error);
   }

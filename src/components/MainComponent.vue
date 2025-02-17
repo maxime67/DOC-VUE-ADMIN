@@ -5,10 +5,14 @@
       <ModalComponent :visible="showModal" :item-id="selectedItemId" @close="closeModal"
                             @confirm="handleDeleteConfirmation" />
       <main class="flex-1 p-6">
-        <div v-if="loading">Loading...</div>
-        <div v-else class="grid gap-6">
+        <div class="grid gap-6">
           <div class="relative flex flex-col rounded-lg bg-white">
             <nav class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div v-if="results.length === 0">
+                <div class="flex items-center justify-center w-full h-32 text-gray-600 text-xl">
+                  No results found 🔎
+                </div>
+              </div>
               <div v-for="item in results" :key="item._id" class="w-full h-full bg-white p-4 rounded">
                 <a :href="item.link">
                   <div
@@ -29,7 +33,7 @@
                         <p>{{ item.description }}</p>
                       </div>
                       <div class="pt-5 flex items-center justify-between">
-                        <p class="flex justify-between w-full gap-4"> <!-- Added w-full and justify-between -->
+                        <p class="flex justify-between w-full gap-4">
                           <a @click.stop.prevent="updateDocButton(item._id)">
                             <button
                               class="rounded-md border border-black py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-black hover:text-white hover:bg-violet-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -66,15 +70,15 @@ import {
   fetchByCategory,
   fetchCategories,
   searchByName,
-  updateDoc
 } from '@/components/utils/ApiService.vue'
 import SidebarComponent from "@/components/Sidebar.vue";
 import ModalComponent from './ModalComponent.vue';
+import router from "@/router/index.js";
 
 const categories = ref([])
 const selectedSubcategories = ref([])
 const loading = ref(false)
-const results = ref()
+const results = ref([])
 const showModal = ref(false)
 const selectedItemId = ref(null)
 
@@ -110,11 +114,11 @@ const handleCategoryClick = async (categoryId) => {
 
 const updateDocButton = async (id) => {
   try {
-    await updateDoc(id)
+    router.push({ name: 'updateDocumentation', params: { id: id } });
   } catch (error) {
-    console.error('Error delete documentation:', error)
+    console.error('Error updating data:', error);
   }
-};
+}
 const searchWithName = async (searchString) => {
   try {
     results.value = await searchByName(searchString)

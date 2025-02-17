@@ -85,7 +85,7 @@ onMounted(async () => {
               placeholder="Name"
           />
           <button
-              class="absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              class="absolute bg-violet-700 right-1 top-1 rounded py-1 px-2.5 border border-transparent text-center text-sm text-white"
               type="button"
               @click="searchWithName()"
           >

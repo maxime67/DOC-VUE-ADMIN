@@ -12,11 +12,19 @@
               <img :src="'../logo/' + item.name + '.svg'" :alt="item.name" class="h-full w-full object-contain"/>
             </div>
             <span class="text-gray-900">{{ item.name }}</span>
+          </div >
+          <div class="">
+
+            <button @click="deleteCatButton(item._id)"
+                    class="p-1 px-3 py-1 text-sm text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors">
+              Remove
+            </button>
+            <button @click="updateCategoryButton(item._id)"
+                    class="ml-1 px-3 py-1 text-sm text-blue-400 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
+              Update
+            </button>
           </div>
-          <button @click="deleteCatButton(item._id)"
-                  class="px-3 py-1 text-sm text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors">
-            Remove
-          </button>
+
         </div>
       </div>
     </main>
@@ -26,6 +34,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import {deleteCat, fetchCategories} from '@/components/utils/ApiService.vue'
+import router from "@/router/index.js";
 
 const loading = ref(true)
 const results = ref([])
@@ -36,6 +45,14 @@ const deleteCatButton = async (id) => {
     results.value = results.value.filter(item => item._id !== id)
   } catch (error) {
     console.error('Error deleting documentation:', error)
+  }
+}
+
+const updateCategoryButton = async (id) => {
+  try {
+    router.push({name: 'updateCategory', params: {id: id}});
+  } catch (error) {
+    console.error('Error updating data:', error);
   }
 }
 
