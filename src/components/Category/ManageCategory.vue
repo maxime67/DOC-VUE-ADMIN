@@ -1,6 +1,6 @@
 <template>
   <ModalComponent :visible="showModal" :item-id="selectedItemId" @close="closeModal"
-                  @confirm="handleDeleteConfirmation" />
+                  @confirm="handleDeleteConfirmation"/>
   <div class="flex min-h-screen bg-gray-50">
     <main class="flex-1 p-6">
       <div v-if="loading" class="flex justify-center items-center h-12">
@@ -14,7 +14,7 @@
               <img :src="'../logo/' + item.name + '.svg'" :alt="item.name" class="h-full w-full object-contain"/>
             </div>
             <span class="text-gray-900">{{ item.name }}</span>
-          </div >
+          </div>
           <div class="">
 
             <button @click="openModal(item._id)"
@@ -35,7 +35,11 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import {deleteCat, fetchCategories} from '@/components/utils/ApiService.vue'
+import {
+  deleteCategory,
+  fetchAllCategories
+  }
+  from '@/components/utils/CategoryService.vue'
 import router from "@/router/index.js";
 import ModalComponent from "@/views/ModalComponent.vue";
 
@@ -46,7 +50,7 @@ const showModal = ref(false)
 const selectedItemId = ref(null)
 const handleDeleteConfirmation = async (id) => {
   try {
-    await deleteCat(id)
+    await deleteCategory(id)
     results.value = results.value.filter(item => item._id !== id)
   } catch (error) {
     console.error('Error deleting documentation:', error)
@@ -72,7 +76,7 @@ const updateCategoryButton = async (id) => {
 
 onMounted(async () => {
   try {
-    results.value = await fetchCategories()
+    results.value = await fetchAllCategories()
   } finally {
     loading.value = false
   }

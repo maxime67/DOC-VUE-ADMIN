@@ -1,7 +1,7 @@
 // SidebarComponent.vue
 <script setup>
 import { ref, onMounted } from 'vue'
-import { fetchCategories } from '@/components/utils/ApiService.vue'
+import { fetchAllCategories } from '@/components/utils/CategoryService.vue'
 
 const props = defineProps({
   onCategoryClick: Function,
@@ -32,7 +32,7 @@ const displayAll = () => {
 
 onMounted(async () => {
   try {
-    categories.value = await fetchCategories()
+    categories.value = await fetchAllCategories()
   } catch (error) {
     console.error('Error fetching categories:', error)
   }

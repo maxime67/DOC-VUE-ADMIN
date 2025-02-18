@@ -3,6 +3,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import { fetchAllCategories} from "@/components/utils/CategoryService.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -36,9 +37,8 @@ const getStateEmoji = (state) => {
 async function fetchData() {
   try {
     // Fetch categories in all cases
-    const catResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/categories`);
-    categories.value = catResponse.data;
-
+    const catResponse = await fetchAllCategories()
+    categories.value = catResponse;
     // If in edit mode, fetch document data
     if (isEditMode) {
       const docResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`);

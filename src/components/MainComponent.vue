@@ -66,12 +66,15 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import {
-  deleteDoc,
-  fetchAll,
-  fetchByCategory,
-  fetchCategories,
+  fetchAllCategories,
+} from '@/components/utils/CategoryService.vue'
+
+import {
   searchByName,
-} from '@/components/utils/ApiService.vue'
+  fetchByCategory,
+  fetchAllDocumentation,
+  deleteDocumentation
+} from "@/components/utils/DocumentationService.vue"
 import SidebarComponent from "@/views/Sidebar.vue";
 import ModalComponent from '../views/ModalComponent.vue';
 import Footer from '../views/FooterViews.vue'
@@ -96,7 +99,7 @@ const closeModal = () => {
 
 const handleDeleteConfirmation = async (id) => {
   try {
-    await deleteDoc(id)
+    await deleteDocumentation(id)
     results.value = results.value.filter(item => item._id !== id)
   } catch (error) {
     console.error('Error deleting documentation:', error)
@@ -130,7 +133,7 @@ const searchWithName = async (searchString) => {
 }
 const displayAll = async () => {
   try {
-    results.value = await fetchAll()
+    results.value = await fetchAllDocumentation()
   } catch (error) {
     console.error('Error fetch All documentation:', error)
   }
@@ -138,7 +141,7 @@ const displayAll = async () => {
 
 onMounted(async () => {
   try {
-    categories.value = await fetchCategories()
+    categories.value = await fetchAllCategories()
     await displayAll()
   } catch (error) {
     console.error('Error fetching categories:', error)

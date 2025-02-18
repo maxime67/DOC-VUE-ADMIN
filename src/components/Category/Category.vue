@@ -3,7 +3,8 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-
+import { fetchAllDocumentation } from '../utils/DocumentationService.vue';
+import { fetchAllCategories } from '../utils/CategoryService.vue';
 const route = useRoute();
 const router = useRouter();
 
