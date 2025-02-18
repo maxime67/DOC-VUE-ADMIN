@@ -1,3 +1,4 @@
+# DocumentForm.vue
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -6,13 +7,14 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const documentId = route.params.id;
-
+const isEditMode = !!documentId;
+console.log(route.params.id);
 const document = ref({
   name: '',
   category: '',
   link: '',
   description: '',
-  state: 'publish'
+  state: 'draft'
 });
 
 const loading = ref(false);
@@ -20,30 +22,39 @@ const categories = ref([]);
 const error = ref();
 const states = ['draft', 'published', 'archived'];
 
-// Helper function for state emojis
 const getStateEmoji = (state) => {
   const stateEmojis = {
     'draft': '📝',
     'published': '📢',
-    'archived': '📦'
+    'archived': '📦',
+    'Review': '👀',
+    'Pending': '⏳'
   };
   return stateEmojis[state] || '📄';
 };
 
 async function fetchData() {
   try {
-    const docResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`)
-    const catResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/categories`)
-
-    document.value = docResponse.data;
+    // Fetch categories in all cases
+    const catResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/categories`);
     categories.value = catResponse.data;
+
+    // If in edit mode, fetch document data
+    if (isEditMode) {
+      const docResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`);
+      document.value = docResponse.data;
+    }
   } catch (err) {
     error.value = 'Failed to load data: ' + err.message;
   }
 }
 
 function handleCategoryChange(value) {
-  document.value.category._id = value;
+  if (isEditMode) {
+    document.value.category._id = value;
+  } else {
+    document.value.category = value;
+  }
 }
 
 function validateForm() {
@@ -59,29 +70,41 @@ function validateForm() {
     error.value = 'Description is required';
     return false;
   }
-  if (!document.value.category) {
+
+  // Handle different category structures between create/edit modes
+  if (isEditMode && !document.value.category?._id) {
+    error.value = 'Category is required';
+    return false;
+  } else if (!isEditMode && !document.value.category) {
     error.value = 'Category is required';
     return false;
   }
+
   return true;
 }
 
-async function updateDocument() {
+async function handleSubmit() {
   if (!validateForm()) return;
 
   try {
     loading.value = true;
     error.value = null;
 
-    await axios.put(
-        `${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`,
-        document.value
-    );
+    if (isEditMode) {
+      await axios.put(
+          `${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`,
+          document.value
+      );
+    } else {
+      await axios.post(
+          `${import.meta.env.VITE_APIURL}/api/documentation`,
+          document.value
+      );
+    }
 
-    await router.push({name: "home"});
-
+    await router.push({ name: "home" });
   } catch (err) {
-    error.value = 'Failed to update document: ' + err.message;
+    error.value = `Failed to ${isEditMode ? 'update' : 'create'} document: ${err.message}`;
   } finally {
     loading.value = false;
   }
@@ -95,7 +118,7 @@ onMounted(fetchData);
     <div class="container mx-auto px-4 py-12 max-w-3xl">
       <!-- Page Title -->
       <h1 class="text-2xl font-bold text-gray-900 mb-8">
-        🔄 Update Document
+        {{ isEditMode ? '🔄 Update Document' : '📄 New Document' }}
       </h1>
 
       <!-- Error Alert -->
@@ -106,7 +129,7 @@ onMounted(fetchData);
         ⚠️ {{ error }}
       </div>
 
-      <form @submit.prevent="updateDocument" class="space-y-8 bg-white p-6 rounded-xl shadow-sm">
+      <form @submit.prevent="handleSubmit" class="space-y-8 bg-white p-6 rounded-xl shadow-sm">
         <!-- Name Field -->
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">📝 Name</label>
@@ -154,7 +177,7 @@ onMounted(fetchData);
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">📂 Category</label>
             <select
-                v-model="document.category._id"
+                :value="isEditMode ? document.category?._id : document.category"
                 required
                 @change="handleCategoryChange($event.target.value)"
                 class="block w-full px-4 py-2.5 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200"
@@ -196,8 +219,8 @@ onMounted(fetchData);
               :disabled="loading"
               class="w-full md:w-auto px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
           >
-            <span v-if="loading">⏳ Updating...</span>
-            <span v-else>✨ Update Document</span>
+            <span v-if="loading">⏳ {{ isEditMode ? 'Updating...' : 'Creating...' }}</span>
+            <span v-else>✨ {{ isEditMode ? 'Update' : 'Create' }} Document</span>
           </button>
         </div>
       </form>

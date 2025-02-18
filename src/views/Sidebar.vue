@@ -11,7 +11,6 @@ const props = defineProps({
 
 const categories = ref([])
 const searchString = ref('')
-const loading = ref(false)
 
 const handleCategoryClick = (categoryId) => {
   if (props.onCategoryClick) {

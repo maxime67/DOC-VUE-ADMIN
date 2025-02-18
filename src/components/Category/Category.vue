@@ -1,10 +1,14 @@
+# CategoryForm.vue
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
+
+const categoryId = computed(() => route.params.id);
+const isEditMode = computed(() => !!categoryId.value);
 
 const category = ref({
   name: '',
@@ -13,9 +17,11 @@ const category = ref({
 const loading = ref(false);
 const error = ref();
 
-async function fetchCategory() {
+async function fetchData() {
+  if (!isEditMode.value) return;
+
   try {
-    const response = await axios.get(`${import.meta.env.VITE_APIURL}/api/categories/${route.params.id}`);
+    const response = await axios.get(`${import.meta.env.VITE_APIURL}/api/categories/${categoryId.value}`);
     category.value = response.data;
   } catch (err) {
     error.value = 'Failed to load category: ' + err.message;
@@ -30,34 +36,41 @@ function validateForm() {
   return true;
 }
 
-async function updateCategory() {
+async function handleSubmit() {
   if (!validateForm()) return;
 
   try {
     loading.value = true;
     error.value = null;
 
-    await axios.put(
-        `${import.meta.env.VITE_APIURL}/api/categories/${route.params.id}`,
-        category.value
-    );
+    if (isEditMode.value) {
+      await axios.put(
+          `${import.meta.env.VITE_APIURL}/api/categories/${categoryId.value}`,
+          category.value
+      );
+    } else {
+      await axios.post(
+          `${import.meta.env.VITE_APIURL}/api/categories`,
+          category.value
+      );
+    }
 
-    router.push({name: "home"});
+    router.push({ name: "home" });
   } catch (err) {
-    error.value = 'Failed to update category: ' + err.message;
+    error.value = `Failed to ${isEditMode.value ? 'update' : 'create'} category: ${err.message}`;
   } finally {
     loading.value = false;
   }
 }
 
-onMounted(fetchCategory);
+onMounted(fetchData);
 </script>
 
 <template>
   <div class="min-h-screen bg-white">
     <div class="container mx-auto px-4 py-8 max-w-3xl">
       <h2 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-8">
-        Update Category
+        {{ isEditMode ? 'Update' : 'Create New' }} Category
       </h2>
 
       <div
@@ -67,7 +80,7 @@ onMounted(fetchCategory);
         {{ error }}
       </div>
 
-      <form @submit.prevent="updateCategory" class="space-y-6">
+      <form @submit.prevent="handleSubmit" class="space-y-6">
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">📝 Name</label>
           <input
@@ -85,8 +98,8 @@ onMounted(fetchCategory);
               :disabled="loading"
               class="w-full md:w-auto px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >
-            <span v-if="loading">Updating...</span>
-            <span v-else>Update Category</span>
+            <span v-if="loading">{{ isEditMode ? 'Updating...' : 'Creating...' }}</span>
+            <span v-else>{{ isEditMode ? 'Update' : 'Create' }} Category</span>
           </button>
         </div>
       </form>

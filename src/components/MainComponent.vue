@@ -60,6 +60,7 @@
       </main>
     </div>
   </div>
+  <Footer></Footer>
 </template>
 
 <script setup>
@@ -71,8 +72,9 @@ import {
   fetchCategories,
   searchByName,
 } from '@/components/utils/ApiService.vue'
-import SidebarComponent from "@/components/Sidebar.vue";
-import ModalComponent from './ModalComponent.vue';
+import SidebarComponent from "@/views/Sidebar.vue";
+import ModalComponent from '../views/ModalComponent.vue';
+import Footer from '../views/FooterViews.vue'
 import router from "@/router/index.js";
 
 const categories = ref([])
