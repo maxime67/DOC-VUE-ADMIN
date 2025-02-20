@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TestComponent from "@/components/MainComponent.vue";
-import CreateComponent from "@/components/CreateComponent.vue";
-import UpdateComponent from "@/components/UpdateComponent.vue";
-
+import ManageCategory from "@/components/Category/ManageCategory.vue";
+import Category from "@/components/Category/Category.vue";
+import DocumentationComponent from "@/components/Documentation/DocumentationComponent.vue";
+import CguView from "@/views/CguView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,14 +13,34 @@ const router = createRouter({
       component: TestComponent
     },
     {
-      path: '/add/documentation',
-      name: 'addDocumentation',
-      component: CreateComponent
-    },
-    {
       path: '/update/documentation/:id',
       name: 'updateDocumentation',
-      component: UpdateComponent
+      component: DocumentationComponent
+    },
+    {
+      path: '/add/documentation',
+      name: 'addDocumentation',
+      component: DocumentationComponent
+    },
+    {
+      path: '/add/category',
+      name: 'createCategory',
+      component: Category
+    },
+    {
+      path: '/update/category/:id',
+      name: 'updateCategory',
+      component: Category
+    },
+    {
+      path: '/manage/category',
+      name: 'manageCategory',
+      component: ManageCategory
+    },
+    {
+      path: '/cgu',
+      name: 'cgu',
+      component: CguView
     }
   ]
 })

@@ -13,8 +13,7 @@
       <div class="hidden lg:block">
         <ul class="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
           <li class="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-            <img class="w-6 rounded-md" :src="`../logo/add.png`" />
-            <a href="#" class="flex items-center">New Documentation</a>
+            <img class="w-12 rounded-md" :src="`../logo/new.png`" />
           </li>
         </ul>
       </div>
