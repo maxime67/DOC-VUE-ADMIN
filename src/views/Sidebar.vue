@@ -43,7 +43,7 @@ onMounted(async () => {
   <aside class="w-64 h-screen">
     <div class="p-4">
       <a @click="displayAll()" class="cursor-pointer text-base font-semibold m-6 group relative w-max">
-        <span class="px-1 relative z-10 group-hover:text-white">AA</span>
+        <span class="px-1 relative z-10 group-hover:text-white">All</span>
         <span class="absolute left-0 bottom-0 w-full h-0.5 transition-all bg-violet-700 z-0 group-hover:h-full"></span>
       </a>
 
