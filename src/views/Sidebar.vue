@@ -2,6 +2,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { fetchAllCategories } from '@/components/utils/CategoryService.vue'
+import {useAuthStore} from '@/stores/auth';
+import {storeToRefs} from 'pinia';
+
+const authStore = useAuthStore();
+// Only destructure the refs, not the methods
+const {isLoggedIn} = storeToRefs(authStore);
 
 const props = defineProps({
   onCategoryClick: Function,
@@ -54,7 +60,7 @@ onMounted(async () => {
         </a>
       </div>
 
-      <div class="inline-flex">
+      <div v-if="isLoggedIn" class="inline-flex">
         <router-link to="/add/category">
           <div class="p-4">
             <ul class="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">

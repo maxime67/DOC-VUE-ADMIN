@@ -21,7 +21,6 @@ export const fetchCategoryById = async (id) => {
   }
 };
 
-
 export const deleteCategory = async (id) => {
   try {
     await axios.delete(
