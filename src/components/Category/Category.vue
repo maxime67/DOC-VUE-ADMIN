@@ -3,8 +3,7 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-import { fetchAllDocumentation } from '../utils/DocumentationService.vue';
-import { fetchAllCategories } from '../utils/CategoryService.vue';
+import { updateCategoryName, createCategory } from '../utils/CategoryService.vue';
 const route = useRoute();
 const router = useRouter();
 
@@ -45,15 +44,17 @@ async function handleSubmit() {
     error.value = null;
 
     if (isEditMode.value) {
-      await axios.put(
-          `${import.meta.env.VITE_APIURL}/api/categories/${categoryId.value}`,
-          category.value
-      );
+      await updateCategoryName(categoryId.value, category.value);
+      // await axios.put(
+      //     `${import.meta.env.VITE_APIURL}/api/categories/${categoryId.value}`,
+      //     category.value
+      // );
     } else {
-      await axios.post(
-          `${import.meta.env.VITE_APIURL}/api/categories`,
-          category.value
-      );
+      await createCategory(category.value)
+      // await axios.post(
+      //     `${import.meta.env.VITE_APIURL}/api/categories`,
+      //     category.value
+      // );
     }
 
     router.push({ name: "home" });

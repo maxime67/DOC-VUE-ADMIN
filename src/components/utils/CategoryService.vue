@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 
-export const fetchAllCategories = async (categories) => {
+export const fetchAllCategories = async () => {
   try {
     const response = await axios.get(import.meta.env.VITE_APIURL + '/api/categories');
     return response.data;
@@ -26,11 +26,21 @@ export const deleteCategory = async (id) => {
 export const updateCategoryName = async (id, newName) => {
   try {
     await axios.put(
-        `${import.meta.env.VITE_APIURL}/api/categories/${id}`,
+        import.meta.env.VITE_APIURL = `/api/categories/${id}`,
         newName
     );
   } catch (error) {
-    console.error('Error delete category:', error);
+    console.error('Error update category:', error);
+  }
+}
+export const createCategory = async (name) => {
+  try {
+    await axios.post(
+        import.meta.env.VITE_APIURL + `/api/categories`,
+        name
+    );
+  } catch (error) {
+    console.error('Error create category:', error);
   }
 }
 </script>
