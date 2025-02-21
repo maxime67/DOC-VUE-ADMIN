@@ -5,7 +5,6 @@ import axios from "axios";
 
 export const fetchAllCategories = async (categories) => {
   try {
-    console.log(import.meta.env.VITE_APIURL)
     const response = await axios.get(import.meta.env.VITE_APIURL + '/api/categories');
     return response.data;
   } catch(error){

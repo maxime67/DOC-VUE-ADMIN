@@ -9,7 +9,6 @@ const route = useRoute();
 const router = useRouter();
 const documentId = route.params.id;
 const isEditMode = !!documentId;
-console.log(route.params.id);
 const document = ref({
   name: '',
   category: '',

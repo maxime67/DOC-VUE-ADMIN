@@ -25,8 +25,6 @@ export const fetchByCategory = async (id) => {
 
 export const searchByName = async (name) => {
   try {
-    console.log(name);
-    
     const response = await axios.get(
         import.meta.env.VITE_APIURL + `/api/documentation/search/${name}`,
     );
