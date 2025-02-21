@@ -1,9 +1,9 @@
 # DocumentForm.vue
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useRoute, useRouter } from 'vue-router';
-import { fetchAllCategories} from "@/components/utils/CategoryService.vue";
+import {onMounted, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {fetchDocumentationById, updateDocumentation, createDocumentation} from '@/components/utils/DocumentationService.vue'
+import {fetchAllCategories} from "@/components/utils/CategoryService.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -27,8 +27,6 @@ const getStateEmoji = (state) => {
     'draft': '📝',
     'published': '📢',
     'archived': '📦',
-    'Review': '👀',
-    'Pending': '⏳'
   };
   return stateEmojis[state] || '📄';
 };
@@ -40,8 +38,7 @@ async function fetchData() {
     categories.value = catResponse;
     // If in edit mode, fetch document data
     if (isEditMode) {
-      const docResponse = await axios.get(`${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`);
-      document.value = docResponse.data;
+      document.value = await fetchDocumentationById(documentId);
     }
   } catch (err) {
     error.value = 'Failed to load data: ' + err.message;
@@ -90,17 +87,10 @@ async function handleSubmit() {
     error.value = null;
 
     if (isEditMode) {
-      await axios.put(
-          `${import.meta.env.VITE_APIURL}/api/documentation/${documentId}`,
-          document.value
-      );
+      await updateDocumentation(documentId, document.value);
     } else {
-      await axios.post(
-          `${import.meta.env.VITE_APIURL}/api/documentation`,
-          document.value
-      );
+      await createDocumentation(document.value);
     }
-
     await router.push({ name: "home" });
   } catch (err) {
     error.value = `Failed to ${isEditMode ? 'update' : 'create'} document: ${err.message}`;

@@ -12,6 +12,16 @@ export const fetchAllCategories = async () => {
   }
 };
 
+export const fetchCategoryById = async (id) => {
+  try {
+    const response = await axios.get(import.meta.env.VITE_APIURL + '/api/categories/' + id);
+    return response.data;
+  } catch(error){
+    console.error('Error fetching categories:', error);
+  }
+};
+
+
 export const deleteCategory = async (id) => {
   try {
     await axios.delete(
@@ -26,7 +36,7 @@ export const deleteCategory = async (id) => {
 export const updateCategoryName = async (id, newName) => {
   try {
     await axios.put(
-        import.meta.env.VITE_APIURL = `/api/categories/${id}`,
+        import.meta.env.VITE_APIURL + `/api/categories/${id}`,
         newName
     );
   } catch (error) {
