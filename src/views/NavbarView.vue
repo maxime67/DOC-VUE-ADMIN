@@ -25,6 +25,11 @@ const {isLoggedIn} = storeToRefs(authStore);
           </div>
         </router-link>
       </div>
+      <div v-else-if="!isLoggedIn">
+      <router-link to="/login">
+        <button>Login</button>
+      </router-link>
+      </div>
 
     </div>
   </nav>
