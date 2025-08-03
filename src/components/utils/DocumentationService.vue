@@ -12,17 +12,6 @@ export const fetchAllDocumentation = async () => {
   }
 }
 
-export const fetchDocumentationById = async (id) => {
-  try {
-    const response = await axios.get(
-        import.meta.env.VITE_APIURL + `/api/documentation/` + id,
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching all data:', error);
-  }
-}
-
 export const fetchByCategory = async (id) => {
   try {
     const response = await axios.get(
@@ -34,31 +23,20 @@ export const fetchByCategory = async (id) => {
   }
 }
 
-export const updateDocumentation = async (id, newDocument) => {
-  try {
-    const response = await axios.put(
-        import.meta.env.VITE_APIURL + `/api/documentation/${id}`,
-        newDocument
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error updating documentation :', error);
-  }
-}
-export const createDocumentation = async (newDocument) => {
-  try {
-    const response = await axios.post(
-        import.meta.env.VITE_APIURL + `/api/documentation/`,
-        newDocument
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error during creation documentation :', error);
-  }
-}
-
 export const searchByName = async (name) => {
   try {
+    if (!name || typeof name !== 'string') {
+      throw new Error('Name parameter is required and must be a string');
+    }
+
+    // Vérification des caractères non autorisés
+    const forbiddenChars = /[\/\\<>:"|?*\x00-\x1f]/;
+    const pathTraversal = /\.\.|\/\.|\\\.|\.\//;
+
+    if (forbiddenChars.test(name) || pathTraversal.test(name)) {
+      return []
+    }
+
     const response = await axios.get(
         import.meta.env.VITE_APIURL + `/api/documentation/search/${name}`,
     );
@@ -66,18 +44,6 @@ export const searchByName = async (name) => {
 
   } catch (error) {
     console.error('Error fetching documenattion by name:', error);
-  }
-}
-
-
-export const deleteDocumentation = async (id) => {
-  try {
-    await axios.delete(
-        import.meta.env.VITE_APIURL + `/api/documentation/${id}`,
-    );
-    location.reload()
-  } catch (error) {
-    console.error('Error delete documentation:', error);
   }
 }
 
