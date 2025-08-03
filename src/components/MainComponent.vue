@@ -190,15 +190,6 @@ const toggleMobileSidebar = () => {
   showMobileSidebar.value = !showMobileSidebar.value
 }
 
-const handleDeleteConfirmation = async (id) => {
-  try {
-    await deleteDocumentation(id)
-    results.value = results.value.filter(item => item._id !== id)
-  } catch (error) {
-    console.error('Error deleting documentation:', error)
-  }
-}
-
 const handleCategoryClick = async (categoryId) => {
   loading.value = true
   try {
