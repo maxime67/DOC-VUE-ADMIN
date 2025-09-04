@@ -1,11 +1,10 @@
 <script>
-import axios from "axios";
+
+import apiService from "./api.js"
 
 export const fetchAllDocumentation = async () => {
   try {
-    const response = await axios.get(
-        import.meta.env.VITE_APIURL + `/api/documentation/`,
-    );
+    const response = await apiService.get('/api/documentation/');
     return response.data;
   } catch (error) {
     console.error('Error fetching all data:', error);
@@ -14,9 +13,7 @@ export const fetchAllDocumentation = async () => {
 
 export const fetchByCategory = async (id) => {
   try {
-    const response = await axios.get(
-        import.meta.env.VITE_APIURL + `/api/documentation/category/${id}`,
-    );
+    const response = await apiService.get(`/api/documentation/category/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching documentation by categories:', error);
@@ -37,9 +34,7 @@ export const searchByName = async (name) => {
       return []
     }
 
-    const response = await axios.get(
-        import.meta.env.VITE_APIURL + `/api/documentation/search/${name}`,
-    );
+    const response = await apiService.get(`/api/documentation/search/${name}`);
     return response.data;
 
   } catch (error) {

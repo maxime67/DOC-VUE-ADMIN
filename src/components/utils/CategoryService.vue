@@ -1,11 +1,10 @@
 <script>
-import axios from "axios";
 
-
+import apiService from "./api";
 
 export const fetchAllCategories = async (categories) => {
   try {
-    const response = await axios.get(import.meta.env.VITE_APIURL + '/api/categories');
+    const response = await apiService.get('/api/categories');
     return response.data;
   } catch(error){
     console.error('Error fetching categories:', error);
