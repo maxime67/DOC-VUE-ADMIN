@@ -2,6 +2,7 @@
 
 import apiService from "./api";
 
+// Fetch All categories
 export const fetchAllCategories = async (categories) => {
   try {
     const response = await apiService.get('/api/categories');

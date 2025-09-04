@@ -190,6 +190,7 @@ const toggleMobileSidebar = () => {
   showMobileSidebar.value = !showMobileSidebar.value
 }
 
+// Handle lors de la sélection d'une catégorie
 const handleCategoryClick = async (categoryId) => {
   loading.value = true
   try {
@@ -212,6 +213,7 @@ const searchWithName = async (searchString) => {
   }
 }
 
+// Main function, fetchAllDocumentation par défaut
 const displayAll = async () => {
   loading.value = true
   try {
@@ -233,6 +235,7 @@ const getStateStyle = (state) => {
 }
 
 const getStateDot = (state) => {
+  // Manage les couleurs en fonction des états de la documentation, toutes sont publié pour le moment
   const dots = {
     'draft': 'bg-yellow-400',
     'published': 'bg-green-400',
@@ -242,6 +245,7 @@ const getStateDot = (state) => {
 }
 
 const getStateEmoji = (state) => {
+  // Manage les logo en fonction de l'etat de la documentation
   const emojis = {
     'draft': '📝',
     'published': '📢',
@@ -251,7 +255,7 @@ const getStateEmoji = (state) => {
 }
 
 const handleImageError = (event) => {
-  // Fallback icon if category icon doesn't load
+  // Si pas d'image trouvé via le nom de la catégorie, rend une image par défaut
   event.target.style.display = 'none'
   event.target.parentNode.innerHTML = '📁'
 }

@@ -2,6 +2,7 @@
 
 import apiService from "./api.js"
 
+// Fetch all documents
 export const fetchAllDocumentation = async () => {
   try {
     const response = await apiService.get('/api/documentation/');
@@ -10,7 +11,7 @@ export const fetchAllDocumentation = async () => {
     console.error('Error fetching all data:', error);
   }
 }
-
+// Fetch all documentation by id Category
 export const fetchByCategory = async (id) => {
   try {
     const response = await apiService.get(`/api/documentation/category/${id}`);
@@ -30,6 +31,7 @@ export const searchByName = async (name) => {
     const forbiddenChars = /[\/\\<>:"|?*\x00-\x1f]/;
     const pathTraversal = /\.\.|\/\.|\\\.|\.\//;
 
+    // Retourne une liste vide dans le cas ou des caractère non autorisés sont soumis
     if (forbiddenChars.test(name) || pathTraversal.test(name)) {
       return []
     }
@@ -38,7 +40,7 @@ export const searchByName = async (name) => {
     return response.data;
 
   } catch (error) {
-    console.error('Error fetching documenattion by name:', error);
+    console.error('Error fetching documentation by name:', error);
   }
 }
 

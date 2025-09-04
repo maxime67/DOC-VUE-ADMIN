@@ -1,20 +1,18 @@
-FROM node:18 AS build
+FROM node:20 AS build
 
 WORKDIR /app
 
-# Copie les fichiers de configuration
+# Copie package.json et install
 COPY package*.json ./
-
-# Installe les dépendances
 RUN npm install
 
-# Copie le code source
+# Copie tout le code
 COPY . .
 
 # Build l'application
 RUN npm run build
 
-# Stage de production
+# Stage production
 FROM httpd:2.4
 
 # Copie les fichiers buildés
